@@ -1,11 +1,51 @@
 package maven.demo;
 
 import java.util.*;
+import java.io.*;
+import java.nio.charset.*;
 
 public class Principal {
 	
-	public static Scanner sc = new Scanner(System.in);
+	public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in, Charset.forName("ISO-8859-1")));
+	private static String charset = "ISO-8859-1";
 	
+    public static String readLine(){
+        String s = "";
+        try{
+            char tmp = (char) in.read();
+            while (tmp != '\n' && tmp != (char) -1) {
+                if (tmp != '\r') s += tmp;
+                tmp = (char) in.read();
+            }
+        }catch(IOException ioe){
+            System.out.println("MyIO.readLine: " + ioe.getMessage());
+        }
+        return s;
+    }
+	
+    public static int readInt(){
+        int i = -1;
+        try{
+            i = Integer.parseInt(readString().trim());
+        }catch(Exception e){}
+        return i;
+    }
+
+    
+    public static String readString(){
+        String s = "";
+        try{
+            char tmp = (char) in.read();
+            while (tmp != '\n' && tmp != ' ' && tmp != '\t' && tmp != (char) -1) {
+                if (tmp != '\r') s += tmp;
+                tmp = (char) in.read();
+            }
+        }catch(IOException ioe){
+            System.out.println("MyIO.readString: " + ioe.getMessage());
+        }
+        return s;
+    }
+    
 	public static void main(String[] args) {
 			
 			DAO dao = new DAO();
@@ -20,20 +60,22 @@ public class Principal {
 			do{
 				System.out.println("=========MENU DE X=========");
 				System.out.println("1: inserir usuario | 2: deleta usuario | 3:alterar usuario | 4:mostrar usuarios X | 0:sair");
-				menu = sc.nextInt();
+				menu = readInt();
 				
 				if(menu == 1){		
 					//Inserir um elemento na tabela
 					
 					System.out.println("Digite ID,Nome,Email,Senha");
 					System.out.println("Id : ");
-					id = sc.nextInt();
+					id = readInt();
 					System.out.println("Nome : ");
-					nome = sc.next();
+					nome = readLine();
+					
 					System.out.println("Email : ");
-					email = sc.next();
+					email = readString();
+					
 					System.out.println("Senha: ");
-					senha = sc.next();
+					senha = readString();
 					
 					
 					X usuario = new X(id, nome, email,senha);
@@ -47,7 +89,7 @@ public class Principal {
 					//Excluir usuário
 					
 					System.out.println("Digite ID de usuário a ser excluido : ");
-					id = sc.nextInt();
+					id = readInt();
 					dao.excluirUsuario(id);
 				}
 				else if(menu == 3){
@@ -55,7 +97,7 @@ public class Principal {
 					X[] usuarios = dao.getUsuarios();
 					int alterado = 0;
 					System.out.println("Digite id de usuario a ser alterado : ");
-					id = sc.nextInt();
+					id = readInt();
 					for(int i = 0; i < usuarios.length; i++) {
 						if(usuarios[i].getId() == id) {
 							alterado = i;
@@ -64,15 +106,15 @@ public class Principal {
 					
 					
 					System.out.println("Digite novo nome : ");
-					nome = sc.nextLine();
+					nome = readLine();
 					usuarios[alterado].setNome(nome);
 
 					System.out.println("Digite novo email : ");
-					email = sc.nextLine();
+					email = readString();
 					usuarios[alterado].setEmail(email);
 
 					System.out.println("Digite nova senha : ");
-					senha = sc.nextLine();
+					senha = readString();
 					usuarios[alterado].setSenha(senha);
 					
 					
